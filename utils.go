@@ -62,13 +62,21 @@ func Init() Flag {
 }
 
 func Start(cmd []string) string {
+	var ExitCodeOut string
+	fmt.Printf("---------- COMMAND LINE ----------\n %v \n----------------------------------\n", cmd)
 	command := exec.Command(cmd[0], cmd[1:]...)
 	startError := command.Start()
 	if startError != nil {
+		fmt.Println("errore qui")
 		log.Fatal(startError)
 	}
 	log.Println("Waiting for command to finish...")
 	ExitCode := command.Wait()
-	log.Printf("Command finished with exit-code: %v", ExitCode)
-	return ExitCode.Error()
+	if ExitCode == nil {
+		ExitCodeOut = "0"
+	} else {
+		ExitCodeOut = ExitCode.Error()
+	}
+	log.Printf("Command finished with exit-code: %v", ExitCodeOut)
+	return ExitCodeOut
 }
