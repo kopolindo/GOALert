@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	gomail "gopkg.in/gomail.v2"
 )
@@ -30,7 +31,8 @@ var (
 		"To":      "",
 		"Subject": "",
 	}
-	conf = "./.local/conf.json"
+	GOPATH = os.Getenv("GOPATH")
+	conf   = filepath.Join(GOPATH, "/src/github.com/kopolindo/GOAlert/.local/conf.json")
 )
 
 func GetConf(fname string) Conf {
