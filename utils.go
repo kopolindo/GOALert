@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"github.com/alecthomas/template"
@@ -21,6 +22,7 @@ var (
 	ActualVersion = Version{"0.1", "dev"}
 	version       = flag.Bool("version", false, "Print version and exit")
 	command       = flag.String("command", "", "Command to execute")
+	configuration = flag.String("configuration", "", "Configuration file [JSON]")
 )
 
 type Flag struct {
@@ -54,6 +56,18 @@ func Init() Flag {
 	}
 	if *version {
 		PrintBanner()
+		os.Exit(0)
+	}
+	if *configuration != "" {
+		conf = *configuration
+		realpath, _ := filepath.Abs(conf)
+		if _, err := os.Stat(realpath); os.IsNotExist(err) {
+			fmt.Printf("The provided file (%v) does not exist", realpath)
+		} else {
+			fmt.Printf("conf provided %v", realpath)
+		}
+		//for testing purposes just print and quit
+		os.Exit(2)
 	}
 	if *command != "" {
 		flags.command = strings.Split(*command, " ")
