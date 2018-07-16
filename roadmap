@@ -1,8 +1,7 @@
 Flag -> Commands [V]
 Banner -> Stringa [V]
-DEFER [V] :Open,Controllo Errore, !!Defer(file.Close)!!
-
-Usage -> la libreria Flag ha una funzionalità apposta: Usage è di tipo func, se la cambio cambia l'help
+DEFER [V]:Open,Controllo Errore, !!Defer(file.Close)!!
+Usage [V]:la libreria Flag ha una funzionalità apposta: Usage è di tipo func, se la cambio cambia l'help
 ```
 func init(){
 	flag.Usage = func() {
