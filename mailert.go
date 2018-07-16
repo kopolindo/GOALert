@@ -1,4 +1,4 @@
-package mailert
+package main
 
 import (
 	"encoding/json"
@@ -31,8 +31,8 @@ var (
 		"To":      "",
 		"Subject": "",
 	}
-	GOPATH = os.Getenv("GOPATH")
-	conf   = filepath.Join(GOPATH, "/src/github.com/kopolindo/GOAlert/.local/conf.json")
+	HOME = os.Getenv("HOME")
+	conf = filepath.Join(HOME, ".config/goalert/conf.json")
 )
 
 func GetConf(fname string) Conf {
@@ -76,10 +76,8 @@ func SendMail(body string) {
 	}
 }
 
-func SetHeaders(standard bool, heads map[string]string) {
-	if !standard {
-		headers["From"] = heads["From"]
-		headers["To"] = heads["To"]
-		headers["Subject"] = heads["Subject"]
-	}
+func SetHeaders(heads map[string]string) {
+	headers["From"] = heads["From"]
+	headers["To"] = heads["To"]
+	headers["Subject"] = heads["Subject"]
 }
