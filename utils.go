@@ -9,14 +9,24 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-
-	"github.com/alecthomas/template"
+	"text/template"
 )
 
 type Version struct {
 	Ver   string
 	Build string
 }
+
+const banner = `
+   __________  ___    __              __ 
+  / ____/ __ \/   |  / /   ___  _____/ /_
+ / / __/ / / / /| | / /   / _ \/ ___/ __/
+/ /_/ / /_/ / ___ |/ /___/  __/ /  / /_  
+\____/\____/_/  |_/_____/\___/_/   \__/  
+
+|Version:	{{.Ver}}
+|Build:		{{.Build}}
+`
 
 var (
 	ActualVersion = Version{"0.1", "dev"}
@@ -25,9 +35,11 @@ var (
 	configuration = flag.String("configuration", "", "Configuration file [JSON]")
 )
 
-type Flag struct {
+type Commands []string
+
+/*type Flag struct {
 	command []string
-}
+}*/
 
 func PrintBanner() {
 	dat, err := ioutil.ReadFile("banner")
@@ -49,7 +61,7 @@ func Usage() {
 
 func Init() Flag {
 	flag.Parse()
-	var flags Flag
+	var cmd Commands
 	if flag.NFlag() == 0 {
 		Usage()
 		os.Exit(0)
@@ -81,7 +93,6 @@ func Start(cmd []string) string {
 	command := exec.Command(cmd[0], cmd[1:]...)
 	startError := command.Start()
 	if startError != nil {
-		fmt.Println("errore qui")
 		log.Fatal(startError)
 	}
 	log.Println("Waiting for command to finish...")
