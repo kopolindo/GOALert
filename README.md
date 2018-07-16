@@ -7,6 +7,8 @@ Usage:
   -version
     	Print version and exit
 ```
+
+Configuration JSON: $HOME/.config/goalert/conf.json
 ```json
 {
 	"username":"username@domain.com",
