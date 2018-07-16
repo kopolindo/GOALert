@@ -1,5 +1,7 @@
-Flag -> Commands [~]
+Flag -> Commands [V]
 Banner -> Stringa [V]
+DEFER [V] :Open,Controllo Errore, !!Defer(file.Close)!!
+
 Usage -> la libreria Flag ha una funzionalità apposta: Usage è di tipo func, se la cambio cambia l'help
 ```
 func init(){
@@ -8,7 +10,7 @@ func init(){
 	flag.PrintDefaults()
 }
 ```
-NewDecoder -> Unmarshal: open, readall -> []byte -> unmarshall
-Open,Controllo Errore, !!Defer(file.Close)!!
+NewDecoder -> Unmarshal: open, readall -> []byte -> unmarshalls
 
+NOTA:
 La funzione init viene eseguita quando il pack è importato o immediatamente se è il main

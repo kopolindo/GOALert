@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -32,21 +31,12 @@ var (
 	ActualVersion = Version{"0.1", "dev"}
 	version       = flag.Bool("version", false, "Print version and exit")
 	command       = flag.String("command", "", "Command to execute")
-	configuration = flag.String("configuration", "", "Configuration file [JSON]")
+	conf          = flag.String("conf", "", "Configuration file [JSON]")
 )
 
 type Commands []string
 
-/*type Flag struct {
-	command []string
-}*/
-
 func PrintBanner() {
-	dat, err := ioutil.ReadFile("banner")
-	if err != nil {
-		fmt.Println(err)
-	}
-	banner := string(dat)
 	templ := template.New("banner")
 	template.Must(templ.Parse(banner))
 	_ = templ.Execute(os.Stderr, ActualVersion)
@@ -59,7 +49,12 @@ func Usage() {
 	return
 }
 
-func Init() Flag {
+func Init() Commands {
+	flag.Usage = func() {
+		PrintBanner()
+		flag.PrintDefaults()
+		os.Exit(0)
+	}
 	flag.Parse()
 	var cmd Commands
 	if flag.NFlag() == 0 {
@@ -67,24 +62,23 @@ func Init() Flag {
 		os.Exit(0)
 	}
 	if *version {
-		PrintBanner()
-		os.Exit(0)
+		flag.Usage()
 	}
-	if *configuration != "" {
-		conf = *configuration
-		realpath, _ := filepath.Abs(conf)
+	if *conf != "" {
+		configuration = *conf
+		realpath, _ := filepath.Abs(configuration)
 		if _, err := os.Stat(realpath); os.IsNotExist(err) {
 			fmt.Printf("The provided file (%v) does not exist", realpath)
 		} else {
-			fmt.Printf("conf provided %v", realpath)
+			fmt.Printf("configuration provided %v", realpath)
 		}
 		//for testing purposes just print and quit
 		os.Exit(2)
 	}
 	if *command != "" {
-		flags.command = strings.Split(*command, " ")
+		cmd = strings.Split(*command, " ")
 	}
-	return flags
+	return cmd
 }
 
 func Start(cmd []string) string {

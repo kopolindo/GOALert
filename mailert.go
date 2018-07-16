@@ -31,28 +31,29 @@ var (
 		"To":      "",
 		"Subject": "",
 	}
-	HOME = os.Getenv("HOME")
-	conf = filepath.Join(HOME, ".config/goalert/conf.json")
+	HOME          = os.Getenv("HOME")
+	configuration = filepath.Join(HOME, ".config/goalert/conf.json")
 )
 
 func GetConf(fname string) Conf {
-	var conf Conf
+	var configuration Conf
 	file, err := os.Open(fname)
 	if err != nil {
 		fmt.Printf("Error opening configuration file %v (%v)\n", fname, err)
 		os.Exit(1)
 	}
+	defer file.Close()
 	decoder := json.NewDecoder(file)
-	decodingError := decoder.Decode(&conf)
+	decodingError := decoder.Decode(&configuration)
 	if decodingError != nil {
 		fmt.Printf("Decoding error: %s\n", decodingError)
 	}
 	file.Close()
-	return conf
+	return configuration
 }
 
 func setParametersFromConf() {
-	parameters := GetConf(conf)
+	parameters := GetConf(configuration)
 	headers["From"] = parameters.From
 	headers["To"] = parameters.To
 	headers["Subject"] = "GOALert_TEST"

@@ -1,8 +1,8 @@
 package main
 
 func main() {
-	var flags Flag
-	flags = Init()
-	ExitCode := Start(flags.command)
+	var cmd Commands
+	cmd = Init()
+	ExitCode := Start(cmd)
 	SendMail(ExitCode)
 }
