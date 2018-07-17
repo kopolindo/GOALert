@@ -11,11 +11,6 @@ import (
 	"text/template"
 )
 
-type Version struct {
-	Ver   string
-	Build string
-}
-
 const banner = `
    __________  ___    __              __ 
   / ____/ __ \/   |  / /   ___  _____/ /_
@@ -24,14 +19,18 @@ const banner = `
 \____/\____/_/  |_/_____/\___/_/   \__/  
 
 |Version:	{{.Ver}}
+|Commit:	{{.Commit}}
 |Build:		{{.Build}}
 `
 
 var (
-	ActualVersion = Version{"0.1", "dev"}
 	version       = flag.Bool("version", false, "Print version and exit")
 	command       = flag.String("command", "", "Command to execute")
 	conf          = flag.String("conf", "", "Configuration file [JSON]")
+	Version       string
+	Commit        string
+	Build         string
+	ActualVersion = struct{ Ver, Commit, Build string }{Version, Commit, Build}
 )
 
 type Commands []string
