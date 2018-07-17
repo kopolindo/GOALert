@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -37,18 +39,14 @@ var (
 
 func GetConf(fname string) Conf {
 	var configuration Conf
-	file, err := os.Open(fname)
-	if err != nil {
-		fmt.Printf("Error opening configuration file %v (%v)\n", fname, err)
-		os.Exit(1)
+	jsonByte, readErr := ioutil.ReadFile(fname)
+	if readErr != nil {
+		log.Fatal(readErr)
 	}
-	defer file.Close()
-	decoder := json.NewDecoder(file)
-	decodingError := decoder.Decode(&configuration)
-	if decodingError != nil {
-		fmt.Printf("Decoding error: %s\n", decodingError)
+	unmarshErr := json.Unmarshal(jsonByte, &configuration)
+	if unmarshErr != nil {
+		log.Fatal(unmarshErr)
 	}
-	file.Close()
 	return configuration
 }
 
