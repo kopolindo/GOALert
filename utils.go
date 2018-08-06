@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"log"
@@ -85,6 +86,22 @@ func Start(cmd []string) string {
 	fmt.Printf("---------- COMMAND LINE ----------\n %v \n----------------------------------\n", cmd)
 	command := exec.Command(cmd[0], cmd[1:]...)
 	startError := command.Start()
+
+	//TODO: error handling
+	stdout, _ := command.StdoutPipe()
+	stderr, _ := command.StderrPipe()
+
+	scanOut := bufio.NewScanner(stdout)
+	scanErr := bufio.NewScanner(stderr)
+	for scanOut.Scan() {
+		out := scanOut.Text()
+		fmt.Println(out)
+	}
+	for scanErr.Scan() {
+		err := scanOut.Text()
+		fmt.Println(err)
+	}
+
 	if startError != nil {
 		log.Fatal(startError)
 	}
