@@ -85,26 +85,21 @@ func Start(cmd []string) string {
 	var ExitCodeOut string
 	fmt.Printf("---------- COMMAND LINE ----------\n %v \n----------------------------------\n", cmd)
 	command := exec.Command(cmd[0], cmd[1:]...)
-	startError := command.Start()
-
-	//TODO: error handling
+	//create stdout pipeline
 	stdout, _ := command.StdoutPipe()
-	stderr, _ := command.StderrPipe()
-
+	//start execution and error handling
+	startError := command.Start()
+	if startError != nil {
+		log.Fatal(startError)
+	}
+	//scanning stdout pipeline
 	scanOut := bufio.NewScanner(stdout)
-	scanErr := bufio.NewScanner(stderr)
+	//printint stdout pipeline buffer
 	for scanOut.Scan() {
 		out := scanOut.Text()
 		fmt.Println(out)
 	}
-	for scanErr.Scan() {
-		err := scanOut.Text()
-		fmt.Println(err)
-	}
-
-	if startError != nil {
-		log.Fatal(startError)
-	}
+	//waiting for exiting and exit-code
 	log.Println("Waiting for command to finish...")
 	ExitCode := command.Wait()
 	if ExitCode == nil {
