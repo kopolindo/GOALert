@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"log"
@@ -82,24 +83,22 @@ func Init() Commands {
 
 func Start(cmd []string) string {
 	var ExitCodeOut string
+	buf := bytes.NewBuffer(nil)
+
 	fmt.Printf("---------- COMMAND LINE ----------\n %v \n----------------------------------\n", cmd)
 
 	command := exec.Command(cmd[0], cmd[1:]...)
 
-	//create stdout/err pipeline
-	stdOutErr, err := command.CombinedOutput()
-	if err != nil {
-		log.Fatal(err)
-	}
+	command.Stderr = buf
+	command.Stdout = buf
+	//command.Stderr = os.Stderr
+	//command.Stdout = os.Stdout
 
 	//START EXECUTION AND ERROR HANDLING
 	startError := command.Start()
 	if startError != nil {
 		log.Fatal(startError)
 	}
-
-	//Print stdout&stderr
-	fmt.Printf("%s\n", stdOutErr)
 
 	//waiting for exiting and exit-code
 	log.Println("Waiting for command to finish...")
@@ -109,6 +108,7 @@ func Start(cmd []string) string {
 	} else {
 		ExitCodeOut = ExitCode.Error()
 	}
+	fmt.Println(buf.String())
 	log.Printf("Command finished with exit-code: %v", ExitCodeOut)
 	return ExitCodeOut
 }
