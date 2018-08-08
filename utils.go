@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"flag"
 	"fmt"
 	"log"
@@ -84,21 +83,24 @@ func Init() Commands {
 func Start(cmd []string) string {
 	var ExitCodeOut string
 	fmt.Printf("---------- COMMAND LINE ----------\n %v \n----------------------------------\n", cmd)
+
 	command := exec.Command(cmd[0], cmd[1:]...)
-	//create stdout pipeline
-	stdout, _ := command.StdoutPipe()
-	//start execution and error handling
+
+	//create stdout/err pipeline
+	stdOutErr, err := command.CombinedOutput()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//START EXECUTION AND ERROR HANDLING
 	startError := command.Start()
 	if startError != nil {
 		log.Fatal(startError)
 	}
-	//scanning stdout pipeline
-	scanOut := bufio.NewScanner(stdout)
-	//printint stdout pipeline buffer
-	for scanOut.Scan() {
-		out := scanOut.Text()
-		fmt.Println(out)
-	}
+
+	//Print stdout&stderr
+	fmt.Printf("%s\n", stdOutErr)
+
 	//waiting for exiting and exit-code
 	log.Println("Waiting for command to finish...")
 	ExitCode := command.Wait()
