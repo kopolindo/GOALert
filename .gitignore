@@ -9,6 +9,9 @@
 goalert
 GOAlert
 
+# Scripts
+*.sh
+
 # Test binary, build with `go test -c`
 *.test
 

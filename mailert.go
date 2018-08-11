@@ -75,6 +75,18 @@ func SendMail(body string) {
 	}
 }
 
+type MockMail struct {
+	Body    string
+	Subject string
+	From    string
+	To      string
+}
+
+func MockSendMail(m MockMail) error {
+	fmt.Printf("sending mock mail %s from %s to %s [%s]", m.Body, m.From, m.To, m.Subject)
+	return nil
+}
+
 func SetHeaders(heads map[string]string) {
 	headers["From"] = heads["From"]
 	headers["To"] = heads["To"]
