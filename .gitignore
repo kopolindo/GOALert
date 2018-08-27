@@ -20,3 +20,6 @@ GOAlert
 
 # Configuration files
 .local/
+
+# Docs
+*.odt
