@@ -1,5 +1,5 @@
 # GOALert
-Tool developed that starts and monitors one process, waiting it for finish and notifying the exit-code via e-mail message
+This tool will start and monitor a process, waiting it for finish and notifying the exit-code via e-mail message
 ```
 Usage:
   -command string
